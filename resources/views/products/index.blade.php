@@ -7,7 +7,7 @@
 
 
     <div class="card">
-        <form action="{{route('product.index')}}" method="get" class="card-header">
+        <form action="{{ route('product.index') }}" method="get" class="card-header">
             <div class="form-row justify-content-between">
                 <div class="col-md-2">
                     <input type="text" name="title" placeholder="Product Title" class="form-control">
@@ -16,9 +16,10 @@
                     <select name="variant" id="" class="form-control">
                         <option value="">--Select A Varient--</option>
                         @foreach ($variants as $variant)
-                            @foreach ($variant->product_variants as $item)
-                                <option value="{{$item->id}}">{{ $variant->title }}->{{ $item->variant }}</option>
-                            @endforeach
+                            <optgroup label="{{ $variant->title }}">
+                                @foreach ($variant->product_variants as $item)
+                                    <option value="{{ $item->variant }}">{{ $item->variant }}</option>
+                                @endforeach
                         @endforeach
 
                     </select>
@@ -64,16 +65,18 @@
                                     :{{ date('d-M-Y', strtotime($product->expire_at)) }}</td>
                                 <td>{{ \Illuminate\Support\Str::limit($product->description, 20) }}</td>
                                 <td>
-                                    <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
+                                    <dl class="row mb-0" style="height: 80px; overflow: hidden"
+                                        id="variant{{ $product->id }}">
                                         @foreach ($product->varient_prices as $item)
                                             <dt class="col-sm-3 pb-0">
                                                 @foreach ($productVariants as $proVar)
-                                                    @if ($proVar->id == $item->product_variant_one)
-                                                        {{ $proVar->variant }} /
-                                                    @endif
                                                     @if ($proVar->id == $item->product_variant_two)
                                                         {{ $proVar->variant }} /
                                                     @endif
+                                                    @if ($proVar->id == $item->product_variant_one)
+                                                        {{ $proVar->variant }} /
+                                                    @endif
+
                                                     @if ($proVar->id == $item->product_variant_three)
                                                         {{ $proVar->variant }}
                                                     @endif
@@ -91,7 +94,8 @@
                                         @endforeach
 
                                     </dl>
-                                    <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show
+                                    <button onclick="$('#variant{{ $product->id }}').toggleClass('h-auto')"
+                                        class="btn btn-sm btn-link">Show
                                         more</button>
                                 </td>
                                 <td>
@@ -120,7 +124,7 @@
 
                 </div>
             </div>
-            {{ $products->links() }}
+            {{ $products->withQueryString()->links() }}
         </div>
     </div>
 @endsection

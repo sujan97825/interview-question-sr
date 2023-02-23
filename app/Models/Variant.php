@@ -17,6 +17,6 @@ class Variant extends Model
  */
 public function product_variants(): HasMany
 {
-    return $this->hasMany(ProductVariant::class, 'variant_id', 'id');
+    return $this->hasMany(ProductVariant::class, 'variant_id', 'id')->groupBy('variant');
 }
 }
