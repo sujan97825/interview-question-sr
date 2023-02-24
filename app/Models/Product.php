@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Product extends Model
 {
     protected $fillable = [
-        'title', 'sku', 'description'
+        'title',
+        'sku',
+        'description'
     ];
 
     /**
@@ -24,5 +26,4 @@ class Product extends Model
     {
         return $this->hasMany(ProductVariant::class);
     }
-
 }

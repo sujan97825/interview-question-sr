@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Variant;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantPrice;
-use App\Models\Variant;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -87,7 +88,34 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        return $request->product_image;
+        // dd($request->all());
+        $product = new Product();
+        $product->title = $request->title;
+        $product->sku = $request->sku;
+        $product->description = $request->description;
+        $product->save();
+
+        $product_variants = $request->input('product_variant');
+        foreach ($product_variants as $product_variant) {
+            foreach ($product_variant['tags'] as $tag) {
+                $productVriant = new ProductVariant();
+                $productVriant->variant_id  = $product_variant['option'];
+                $productVriant->product_id   = $product->id;
+                $productVriant->variant   = $tag;
+
+                $productVriant->save();
+            }
+        }
+        // $product_variant_prices = $request->input('product_variant_prices');
+        // foreach ($product_variant_prices as $value) {
+        //     $variants = array_filter(explode("/", $value['title']));
+        //     $productVariantPrice = new ProductVariantPrice();
+        //     $productVariantPrice->product_id   = $product->id;
+        //     $productVariantPrice->price   = $value->price;
+        //     $productVariantPrice->stock   = $value->stock;
+        //     $productVariantPrice->product_id   = $product->id;
+        // }
+        // return $request->product_image;
     }
 
 
